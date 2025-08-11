@@ -44,4 +44,4 @@
       <li>Survive as long as possible!</li>
       <li>Want to try again? Restart the game by pressing "Restart Game" button. </li>
     </ul>
-    <h1> Enjoy~ </h1>
+<h1> Enjoy~ </h1>
