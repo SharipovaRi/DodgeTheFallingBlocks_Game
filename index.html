@@ -38,11 +38,21 @@
       background-color: rgb(200, 237, 241);
       color: #40545c;
       border-radius: 5px;
-      
+      user-select: none;
     }
 
     button:hover {
       background-color: rgb(140, 182, 187);
+    }
+    #controls {
+      margin-top: 10px;
+    }
+
+    #controls button {
+      padding: 10px 25px;
+      font-size: 18px;
+      margin: 0 10px;
+      user-select: none;
     }
   </style>
 </head>
@@ -53,6 +63,11 @@
 
     <canvas id="gameCanvas" width="500" height="600"></canvas>  
     <!--Id for JavaScript, width and height of the game-->
+    
+    <div id="controls">
+      <button id="leftBtn">◀ Left</button>
+      <button id="rightBtn">Right ▶</button>
+    </div>
 
     <br /> <!--space-->
     <button id="restartBtn">Restart Game</button> <!--id for button and the text inside of the button-->
@@ -61,6 +76,8 @@
     const canvas = document.getElementById("gameCanvas"); /* Get element by id that we defined in HTML */
     const ctx = canvas.getContext("2d"); /*Shapes that are 2d rendering context form that will be drawn*/
     const restartBtn = document.getElementById("restartBtn"); /*Get element by id for button*/
+    const leftBtn = document.getElementById("leftBtn");
+    const rightBtn = document.getElementById("rightBtn");
 
     /* Game state variables */
     let player, block, score, gameOver;
@@ -88,6 +105,30 @@
       }
     });
 
+     // Button controls (touch + mouse)
+    function moveLeft() {
+      if (!gameOver && player.x > 0) player.x -= player.speed;
+    }
+    function moveRight() {
+      if (!gameOver && player.x < canvas.width - player.size) player.x += player.speed;
+    }
+    leftBtn.addEventListener("touchstart", e => {
+      e.preventDefault();
+      moveLeft();
+    });
+    leftBtn.addEventListener("mousedown", e => {
+      e.preventDefault();
+      moveLeft();
+    });
+
+    rightBtn.addEventListener("touchstart", e => {
+      e.preventDefault();
+      moveRight();
+    });
+    rightBtn.addEventListener("mousedown", e => {
+      e.preventDefault();
+      moveRight();
+    });
 
     /*Function cleares the previous fram so we can draw next one without trails from prev game*/
     function gameLoop() {
@@ -100,11 +141,11 @@
       // Draw player, yellow color 
       ctx.fillStyle = "#FFFFC5";
       ctx.fillRect(player.x, player.y, player.size, player.size); /*creating square by function that use parameters that we specified earlier for player */
-
+      
       // Draw block, purple red
       ctx.fillStyle = "#D6B4FC";
       ctx.fillRect(block.x, block.y, block.size, block.size); /*creating square by function that use parameters that we specified earlier for block*/
-
+      
       // Draw score, color gray, font, and add text postion on the top-left corner
       ctx.fillStyle = "#3b3b3b";
       ctx.font = "20px Courier New";
