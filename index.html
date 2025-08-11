@@ -38,21 +38,23 @@
       background-color: rgb(200, 237, 241);
       color: #40545c;
       border-radius: 5px;
-      user-select: none;
+      user-select: none; /*Prevent from selecting text(highliting)*/
     }
 
     button:hover {
       background-color: rgb(140, 182, 187);
     }
+    /*CSS for buttons*/
     #controls {
       margin-top: 10px;
     }
 
     #controls button {
       padding: 10px 25px;
+      font-family: 'Courier New', Courier, monospace;
       font-size: 18px;
       margin: 0 10px;
-      user-select: none;
+      user-select: none;  /*Prevent from selecting text(highliting)*/
     }
   </style>
 </head>
@@ -63,7 +65,7 @@
 
     <canvas id="gameCanvas" width="500" height="600"></canvas>  
     <!--Id for JavaScript, width and height of the game-->
-    
+    <!--Buttons for left and rihgt-->
     <div id="controls">
       <button id="leftBtn">◀ Left</button>
       <button id="rightBtn">Right ▶</button>
@@ -112,15 +114,16 @@
     function moveRight() {
       if (!gameOver && player.x < canvas.width - player.size) player.x += player.speed;
     }
+    /*Left button for touch or mouse */
     leftBtn.addEventListener("touchstart", e => {
-      e.preventDefault();
+      e.preventDefault(); // you call on an event to stop the browser’s default behavior for that event.
       moveLeft();
     });
     leftBtn.addEventListener("mousedown", e => {
       e.preventDefault();
       moveLeft();
     });
-
+     /*Right button for touch or mouse */
     rightBtn.addEventListener("touchstart", e => {
       e.preventDefault();
       moveRight();
