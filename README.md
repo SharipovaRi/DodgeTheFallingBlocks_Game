@@ -39,9 +39,10 @@
     </ol>
 <h2>How to Play</h2>
     <ul>
+      <li>Start the game by pressing "Start" button. </li>
       <li>Use  the arrow keys (← →) or on-screen buttons to move your character left and right.</li>
       <li>Avoid the blocks falling from the top of the screen.</li>
       <li>Survive as long as possible!</li>
-      <li>Want to try again? Restart the game by pressing "Start" button. </li>
+      <li>Want to try again? Restart the game by pressing "Restart Game" button. </li>
     </ul>
 <h1> Enjoy~ </h1>
