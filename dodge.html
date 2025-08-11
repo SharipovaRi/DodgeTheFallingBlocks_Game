@@ -1,0 +1,142 @@
+<!DOCTYPE html> <!--HTML setup-->
+<html> <!--Root of HTML page-->
+<head> <!--Head of the page that contains meta data and settings for the page-->
+  <meta charset="UTF-8"> <!--Characters are encoded in universal standard-->
+  <title>Dodge the Falling Blocks</title> <!--Title that will be shown in the browser tab-->
+  <style> /*CSS*/
+    body { 
+      text-align: center; 
+      background: rgb(255, 255, 255); 
+      margin: 0; 
+      padding: 10%;
+    } /*text position, background color and remove margin of the browser page*/
+    #frame {
+      display: inline-block; /* shrinkwrap to contents */
+      background-color: rgb(255, 255, 255); /* dark Tetris block color */
+      padding: 20px;
+      border: 12px solid #bca5cf; /* bright teal border for a blocky look */
+      box-shadow:
+        6px 0 #796a85,      /* extra layered block shadows */
+        -6px  0 #796a85;
+      border-radius: 3%; /* optional rounded corners */
+    }canvas { 
+      background: rgb(200, 237, 241); 
+      display: block; 
+      margin: 20px auto; 
+      border: 2px solid rgb(79, 120, 124);
+      border-radius: 3%; 
+
+    } /*Game area background block level with margin and centers horizontally with auto*/
+    
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      font-weight: bold;
+      font-family: 'Courier New', Courier, monospace;
+      margin-top: 15px;
+      border: 2px solid rgb(79, 120, 124);
+      background-color: rgb(200, 237, 241);
+      color: #40545c;
+      border-radius: 5px;
+      
+    }
+
+    button:hover {
+      background-color: rgb(140, 182, 187);
+    }
+  </style>
+</head>
+
+<body> <!--HTML-->
+  <div id="frame"> <!--Frame around the game-->
+    <h1 style="color: #40545c; font-family: 'Courier New', Courier, monospace; font-weight: bold; text-shadow: 2px 2px 4px rgb(200, 237, 241);">Dodge the Falling Blocks</h1> <!--Title of the game-->
+
+    <canvas id="gameCanvas" width="500" height="600"></canvas>  
+    <!--Id for JavaScript, width and height of the game-->
+
+    <br /> <!--space-->
+    <button id="restartBtn">Restart Game</button> <!--id for button and the text inside of the button-->
+  
+  <script> /*JS*/
+    const canvas = document.getElementById("gameCanvas"); /* Get element by id that we defined in HTML */
+    const ctx = canvas.getContext("2d"); /*Shapes that are 2d rendering context form that will be drawn*/
+    const restartBtn = document.getElementById("restartBtn"); /*Get element by id for button*/
+
+    /* Game state variables */
+    let player, block, score, gameOver;
+
+    function initGame() { /*Initilialize the game function */
+      player = { x: 225, y: 540, size: 50, speed: 7 }; /*Playes position, size and speed in pixels per move*/
+      block = { x: Math.random() * 450, y: -50, size: 50, speed: 5 }; /*Bloks x since they fall from random area, y is negative since it starts above the screen. Speed is how fast it falls. */
+      score = 0; /*Score of the game*/
+      gameOver = false; /*Boolean flag  to stop when you loose the game. */
+    }
+
+    /*Reset the block function when it falls past the bottom*/
+    function resetBlock() {
+      block.y = -block.size; /*Go back to above the screen */
+      block.x = Math.random() * (500 - block.size); /*Randomize horizontal position. */
+      block.speed += 0.3; /*Increase the speed*/
+      score++;/*Add one point to the score*/
+    }
+
+    /*Listens for keyboard presses. */
+    document.addEventListener("keydown", e => {
+      if (!gameOver) {
+      if (e.key === "ArrowLeft" && player.x > 0) player.x -= player.speed; /*Press left arrow, moves player left (unitl edge of the canvas) since it removes the speed amount*/
+      if (e.key === "ArrowRight" && player.x < canvas.width - player.size) player.x += player.speed;/*Press right arrow, moves player right but not over right side of the canvas since it adds the speed amount*/
+      }
+    });
+
+
+    /*Function cleares the previous fram so we can draw next one without trails from prev game*/
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Move block down by the speed. 
+      block.y += block.speed;
+      if (block.y > 600) resetBlock(); /*If the block past the game area, it resets. */
+
+      // Draw player, yellow color 
+      ctx.fillStyle = "#FFFFC5";
+      ctx.fillRect(player.x, player.y, player.size, player.size); /*creating square by function that use parameters that we specified earlier for player */
+
+      // Draw block, purple red
+      ctx.fillStyle = "#D6B4FC";
+      ctx.fillRect(block.x, block.y, block.size, block.size); /*creating square by function that use parameters that we specified earlier for block*/
+
+      // Draw score, color gray, font, and add text postion on the top-left corner
+      ctx.fillStyle = "#3b3b3b";
+      ctx.font = "20px Courier New";
+      ctx.fillText("Score: " + score, 10, 25);
+
+      // Collision detection between player and block (Axis-Aligned Bounding Box method).If they overlap, set gameOver = true.
+      if (player.x < block.x + block.size &&
+          player.x + player.size > block.x &&
+          player.y < block.y + block.size &&
+          player.y + player.size > block.y) {
+        gameOver = true;
+      }
+      /*If the game is not over, browser API functio nthat tell the browser to call function again before the next screen repaint.*/
+      if (!gameOver) {
+        requestAnimationFrame(gameLoop);
+      } else { /*If game is over, then the animation is paused and it shows game over in the middle of the game screen and shows your score*/
+        ctx.fillStyle = "#3b3b3b";
+        ctx.font = "27px Courier New";
+        ctx.fillText("Game Over! Score: " + score, 90, 300);
+      }
+    }
+
+    /* Restart button event, if button is clicked initlize new game and start the game */
+    restartBtn.addEventListener("click", () => {
+      initGame();
+      gameLoop();
+    });
+
+    /*Run the game the first time*/
+    initGame();
+    gameLoop(); 
+  </script>
+</div>
+</body>
+</html>
