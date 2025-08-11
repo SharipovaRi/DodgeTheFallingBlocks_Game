@@ -56,39 +56,62 @@
       margin: 0 10px;
       user-select: none;  /*Prevent from selecting text(highliting)*/
     }
+    /* Hide game elements initially */
+    #gameUI {
+      display: none;
+    }
+    /* Style start screen */
+    #startScreen {
+      font-family: 'Courier New', Courier, monospace;
+      color: #40545c;
+      user-select: none;
+    }
   </style>
 </head>
 
 <body> <!--HTML-->
-  <div id="frame"> <!--Frame around the game-->
-    <h1 style="color: #40545c; font-family: 'Courier New', Courier, monospace; font-weight: bold; text-shadow: 2px 2px 4px rgb(200, 237, 241);">Dodge the Falling Blocks</h1> <!--Title of the game-->
 
-    <canvas id="gameCanvas" width="500" height="600"></canvas>  
-    <!--Id for JavaScript, width and height of the game-->
-    <!--Buttons for left and rihgt-->
-    <div id="controls">
-      <button id="leftBtn">◀ Left</button>
-      <button id="rightBtn">Right ▶</button>
+  <div id="frame"> <!--Frame around the game-->
+    <h1 style="color: #40545c; font-family: 'Courier New', Courier, monospace; font-weight: bold; text-shadow: 2px 2px 4px rgb(200, 237, 241);">Dodge the Falling Blocks</h1> 
+    
+    <!-- Start Screen -->
+    <div id="startScreen">
+      <p>Press the button below to start the game</p>
+      <button id="startBtn">Start Game</button>
     </div>
 
-    <br /> <!--space-->
-    <button id="restartBtn">Restart Game</button> <!--id for button and the text inside of the button-->
-  
+    <!--Title of the game-->
+    <div id="gameUI">
+      <canvas id="gameCanvas" width="500" height="600"></canvas>  
+      <!--Id for JavaScript, width and height of the game-->
+      <!--Buttons for left and rihgt-->
+      <div id="controls">
+        <button id="leftBtn">◀ Left</button>
+        <button id="rightBtn">Right ▶</button>
+      </div>
+
+      <br /> <!--space-->
+      <button id="restartBtn">Restart Game</button> <!--id for button and the text inside of the button-->
+    </div>
   <script> /*JS*/
     const canvas = document.getElementById("gameCanvas"); /* Get element by id that we defined in HTML */
     const ctx = canvas.getContext("2d"); /*Shapes that are 2d rendering context form that will be drawn*/
     const restartBtn = document.getElementById("restartBtn"); /*Get element by id for button*/
     const leftBtn = document.getElementById("leftBtn");
     const rightBtn = document.getElementById("rightBtn");
+    const startBtn = document.getElementById("startBtn");
+    const startScreen = document.getElementById("startScreen");
+    const gameUI = document.getElementById("gameUI");
 
     /* Game state variables */
     let player, block, score, gameOver;
+    let animationId = null; /* To track the animation frame id*/
 
     function initGame() { /*Initilialize the game function */
       player = { x: 225, y: 540, size: 50, speed: 7 }; /*Playes position, size and speed in pixels per move*/
       block = { x: Math.random() * 450, y: -50, size: 50, speed: 5 }; /*Bloks x since they fall from random area, y is negative since it starts above the screen. Speed is how fast it falls. */
       score = 0; /*Score of the game*/
-      gameOver = false; /*Boolean flag  to stop when you loose the game. */
+      gameOver = false; /*Boolean flag to stop when you loose the game. */
     }
 
     /*Reset the block function when it falls past the bottom*/
@@ -173,13 +196,23 @@
 
     /* Restart button event, if button is clicked initlize new game and start the game */
     restartBtn.addEventListener("click", () => {
-      initGame();
-      gameLoop();
-    });
+        if (animationId) {   /*Before restarting your game, you stop the old animation loop to avoid having two loops running simultaneously and conflicting.*/
+          cancelAnimationFrame(animationId);
+        }
+        initGame();
+        gameLoop();
+      });
 
-    /*Run the game the first time*/
-    initGame();
-    gameLoop(); 
+    /*Start the game the first time with Start button*/
+      startBtn.addEventListener("click", () => {
+        /* Hide start screen, show game UI*/
+        startScreen.style.display = "none";
+        gameUI.style.display = "block";
+
+        initGame(); /* Initially game UI hidden, start screen visible - no game loop running*/
+        gameLoop();
+      }); 
+
   </script>
 </div>
 </body>
