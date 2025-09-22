@@ -24,7 +24,7 @@
       <li>ExpressJS</li>
       <li>Hosted on Railway</li>
     </ul>
-<h2>Installation adn Running </h2>
+<h2>Installation and Running </h2>
     <ol>
       <li>Download or clone the project files (<code>index.html</code>, <code>package.json</code>, and <code>index.js</code>).</li>
       <li>Make sure you have Node.js installed.</li>
